@@ -4,6 +4,7 @@ class Car {
     this.y=y; // Center y of the car
     this.width=width;
     this.height=height;
+    this.img=document.getElementById("car");
 
     this.speed=0;
     this.acceleration=0.2;
@@ -47,6 +48,22 @@ class Car {
     ctx.translate(this.x,this.y);
     ctx.rotate(-this.angle);
 
+    this.#drawImg(ctx);
+    //this.#drawRect(ctx);
+
+    ctx.restore();
+  }
+
+  #drawImg(ctx){
+    const w=80, h=156;
+    ctx.drawImage(
+      this.img,
+      0, 0, w, h, // Crop image sprite
+      -w/4, -h/4, w/2, h/2 // Place image in canvas
+    );
+  }
+
+  #drawRect(ctx){
     ctx.beginPath();
     ctx.rect(
       -this.width/2,
@@ -55,7 +72,5 @@ class Car {
       this.height
     );
     ctx.fill();
-
-    ctx.restore();
   }
 }
