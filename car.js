@@ -1,9 +1,9 @@
 class Sprite {
   constructor(w, h, ratio, img){
-    this.w=w;
-    this.h=h;
-    this.ratio=ratio;
-    this.img=document.getElementById(img);
+    this.w = w;
+    this.h = h;
+    this.ratio = ratio;
+    this.img = document.getElementById(img);
   }
 
   draw(ctx){
@@ -19,23 +19,26 @@ class Sprite {
 
 class Car {
   constructor(x,y,width,height){
-    this.x=x; // Center x of the car
-    this.y=y; // Center y of the car
-    this.width=width;
-    this.height=height;
-    this.sprite=new Sprite(80, 156, 3, "car");
+    this.x = x; // Center x of the car
+    this.y = y; // Center y of the car
+    this.width = width;
+    this.height = height;
+    this.sprite = new Sprite(80, 156, 3, "car");
 
-    this.speed=0;
-    this.acceleration=0.2;
-    this.maxSpeed=7;//3
-    this.friction=0.05;
-    this.angle=-Math.PI/2;//0;
+    this.speed = 0;
+    this.acceleration = 0.2;
+    this.maxSpeed = 7;//3
+    this.friction = 0.05;
+    this.angle = -Math.PI/2;//0;
 
-    this.controls=new Controls();
+    this.sensor = new Sensor(this);
+    
+    this.controls = new Controls();
   }
 
-  update(){
+  update(roadBorders){
     this.#move();
+    this.sensor.update(roadBorders);
 
   }
 
@@ -72,6 +75,8 @@ class Car {
     //this.#drawRect(ctx);
 
     ctx.restore();
+    
+    this.sensor.draw(ctx);
   }
 
   #drawRect(ctx){

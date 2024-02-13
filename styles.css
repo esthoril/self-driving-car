@@ -3,9 +3,12 @@ body {
   background: #222;
   overflow: hidden;
   text-align: center;
-  background: url(img/concrete2.jpg);
 }
 
 #myCanvas {
   /*background: #F8F8FB;*/
+  width: 1200px;
+  background: url(img/concrete2.jpg) center center cover;
 }
+
+#debug { position: absolute; top: 12px; right: 12px; }

@@ -5,10 +5,14 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="debug">X<br/>Y</div>
   <img id="car" src="img/car.png" style="display:none;"/>
-  <canvas id="myCanvas"></canvas>
+  <canvas id="myCanvas" onclick=append()></canvas>
   <script src="controls.js"></script>
+  <script src="util.js"></script>
+  <script src="sensor.js"></script>
   <script src="car.js"></script>
+  <script src="track.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
