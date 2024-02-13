@@ -1,18 +1,14 @@
-class Ray {
-  // To do
-}
-
 class Sensor {
   constructor(car){
     this.car = car;
     this.rayCount = 5;
     this.rayLength = 100;
     this.raySpread = Math.PI/2;
-    
+
     this.rays = [];
     this.readings = []; // Sensor reading
   }
-  
+
   update(roadBorders){
     this.#castRays();
     this.readings = [];
@@ -21,7 +17,7 @@ class Sensor {
       this.readings.push(val);
     }
   }
-  
+
   // Find all intersections and keep closest to the car
   #getReading(ray, roadBorders){
     let touches = [];
@@ -37,13 +33,13 @@ class Sensor {
     // No intersection for this ray
     if(touches.length==0)
       return null;
-        
+
     // Find closes touch
     const offsets = touches.map(e=>e.offset);
     const minOffset = Math.min(...offsets);
     return touches.find(e=>e.offset==minOffset);
   }
-  
+
   #castRays(){
     this.rays = [];
     for(let i=0; i<this.rayCount; i++) {
@@ -55,28 +51,26 @@ class Sensor {
         x:this.car.x - Math.sin(rayAngle)*this.rayLength,
         y:this.car.y - Math.cos(rayAngle)*this.rayLength};
       this.rays.push([start, end]);
-    }    
+    }
   }
-  
+
   draw(ctx){
+    const drawLine = (ctx, A, B, color, width) => {
+      ctx.beginPath();
+      ctx.lineWidth = width;
+      ctx.strokeStyle = color;
+      ctx.moveTo(A.x, A.y);
+      ctx.lineTo(B.x, B.y);
+      ctx.stroke();
+    }
+
     for(let i=0; i<this.rayCount; i++) {
       let end = this.rays[i][1];
       if(this.readings[i])
         end = this.readings[i];
 
-      ctx.beginPath();
-      ctx.lineWidth=2;
-      ctx.strokeStyle="yellow";
-      ctx.moveTo(this.rays[i][0].x, this.rays[i][0].y);
-      ctx.lineTo(end.x, end.y);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.lineWidth=2;
-      ctx.strokeStyle="black";
-      ctx.moveTo(end.x, end.y);
-      ctx.lineTo(this.rays[i][1].x, this.rays[i][1].y);
-      ctx.stroke();
+      drawLine(ctx, this.rays[i][0], end, "yellow", 2);
+      drawLine(ctx, end, this.rays[i][1], "black", 1);
     }
-  }  
+  }
 }

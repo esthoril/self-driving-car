@@ -20,36 +20,29 @@ const innerTrack = [
   [979, 152], [994, 153]
 ]
 
-const offset = 329
+const offset = 329;
 
 class Track {
   constructor(){
     this.roadBorders = this.#setBorders();
   }
-  
+
   #setBorders(){
-    let border = [];
-    for(let i=0; i<outerTrack.length-1; i++) {
-      const x1 = outerTrack[i][0] - offset;
-      const x2 = outerTrack[i+1][0] - offset;
-      const y1 = outerTrack[i][1];
-      const y2 = outerTrack[i+1][1];
-      
-      const start = {x: x1, y: y1};
-      const end = {x: x2, y: y2};
-      border.push([start, end]);
-    }
-    for(let i=0; i<innerTrack.length-1; i++) {
-      const x1 = innerTrack[i][0] - offset;
-      const x2 = innerTrack[i+1][0] - offset;
-      const y1 = innerTrack[i][1];
-      const y2 = innerTrack[i+1][1];
-      
-      const start = {x: x1, y: y1};
-      const end = {x: x2, y: y2};
-      border.push([start, end]);
-    }
-    return border;
+    const createBorder = (track, offset) => {
+      const border = [];
+
+      for(let i=0; i<track.length-1; i++) {
+        const [x1, y1] = [track[i][0] - offset, track[i][1]];
+        const [x2, y2] = [track[i + 1][0] - offset, track[i + 1][1]];
+        border.push([{ x: x1, y: y1 }, { x: x2, y: y2 }]);
+      }
+      return border;
+    };
+
+    const outerBorder = createBorder(outerTrack, offset);
+    const innerBorder = createBorder(innerTrack, offset);
+
+    return outerBorder.concat(innerBorder);
   }
 
   draw(ctx) {
@@ -57,18 +50,16 @@ class Track {
     ctx.lineWidth=6;
     ctx.strokeStyle="#0525FF";
 
-    // Outer track
-    ctx.moveTo(outerTrack[0][0]-offset, outerTrack[0][1]);
-    for(let i=1; i<outerTrack.length; i++) {
-      ctx.lineTo(outerTrack[i][0]-offset, outerTrack[i][1])
-    }
-    ctx.stroke();
+    this.#drawTrack(ctx, outerTrack);
+    this.#drawTrack(ctx, innerTrack);
 
-    // Inner track
-    ctx.moveTo(innerTrack[0][0]-offset, innerTrack[0][1]);
-    for(let i=1; i<innerTrack.length; i++) {
-      ctx.lineTo(innerTrack[i][0]-offset, innerTrack[i][1])
-    }
     ctx.stroke();
+  }
+
+  #drawTrack(ctx, arr){
+    ctx.moveTo(arr[0][0]-offset, arr[0][1]);
+    for(let i=1; i<arr.length; i++) {
+      ctx.lineTo(arr[i][0]-offset, arr[i][1])
+    }
   }
 }
