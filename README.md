@@ -10,3 +10,7 @@ Inspiration YouTube
 
 ## Pipeline
 
+## Changelog
+
+* `2024-02-13` Collision detection
+* `2024-02-12` Polygon inner and outer track; Raycasting

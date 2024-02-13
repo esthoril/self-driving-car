@@ -58,8 +58,6 @@ class Track {
 
   #drawTrack(ctx, arr){
     ctx.moveTo(arr[0][0]-offset, arr[0][1]);
-    for(let i=1; i<arr.length; i++) {
-      ctx.lineTo(arr[i][0]-offset, arr[i][1])
-    }
+    arr.slice(1).forEach(point => ctx.lineTo(point[0] - offset, point[1]));
   }
 }

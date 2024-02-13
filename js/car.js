@@ -22,6 +22,9 @@ class Car {
     this.x = x; // Center x of the car
     this.y = y; // Center y of the car
     this.sprite = new Sprite(2, "car");
+    
+    this.width = this.sprite.w/this.sprite.ratio;
+    this.height = this.sprite.h/this.sprite.ratio;
 
     this.speed = 0;
     this.acceleration = 0.2;
@@ -31,13 +34,50 @@ class Car {
     this.turningRadius = 0.06; // 0.06 Normal 0.04 Big 0.08 Small/sharp
 
     this.sensor = new Sensor(this);
-
     this.controls = new Controls();
   }
 
   update(roadBorders){
-    this.#move();
+    if(!this.damaged){
+      this.#move();
+      this.polygon = this.#createPolygon();
+      this.damaged = this.#assesDamage(roadBorders);
+    }
     this.sensor.update(roadBorders);
+  }
+
+  #assesDamage(roadBorders){
+    for(let i=0; i<roadBorders.length; i++){
+      if(polyIntersect(this.polygon, roadBorders[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Bounding box of the car
+  #createPolygon(){
+    const points = [];
+    const rad = Math.hypot(this.width, this.height)/2;
+    const alpha = Math.atan2(this.width, this.height);
+    
+    points.push({
+      x:this.x-Math.sin(this.angle-alpha)*rad,
+      y:this.y-Math.cos(this.angle-alpha)*rad
+    });
+    points.push({
+      x:this.x-Math.sin(this.angle+alpha)*rad,
+      y:this.y-Math.cos(this.angle+alpha)*rad
+    });
+    points.push({
+      x:this.x-Math.sin(Math.PI+this.angle-alpha)*rad,
+      y:this.y-Math.cos(Math.PI+this.angle-alpha)*rad
+    });
+    points.push({
+      x:this.x-Math.sin(Math.PI+this.angle+alpha)*rad,
+      y:this.y-Math.cos(Math.PI+this.angle+alpha)*rad
+    });
+    return points;
   }
 
   #move(){
@@ -63,16 +103,27 @@ class Car {
   }
 
   draw(ctx){
+    //this.#drawSprite(ctx);
+    this.#drawPolygon(ctx);
+
+    this.sensor.draw(ctx);
+  }
+
+  #drawSprite(ctx){
     ctx.save();
     ctx.translate(this.x,this.y);
     ctx.rotate(-this.angle);
-
     this.sprite.draw(ctx);
     //this.#drawRect(ctx);
-
     ctx.restore();
-
-    this.sensor.draw(ctx);
+  }
+  
+  #drawPolygon(ctx){
+    ctx.fillStyle = this.damaged ? "gray" : "black";
+    ctx.beginPath();
+    ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+    this.polygon.slice(1).forEach(point => ctx.lineTo(point.x, point.y));
+    ctx.fill();
   }
 
   #drawRect(ctx){

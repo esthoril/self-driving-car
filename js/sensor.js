@@ -12,10 +12,7 @@ class Sensor {
   update(roadBorders){
     this.#castRays();
     this.readings = [];
-    for(let i=0; i<this.rays.length; i++) {
-      const val = this.#getReading(this.rays[i], roadBorders);
-      this.readings.push(val);
-    }
+    this.rays.forEach(ray => this.readings.push(this.#getReading(ray, roadBorders)));
   }
 
   // Find all intersections and keep closest to the car
@@ -70,7 +67,7 @@ class Sensor {
         end = this.readings[i];
 
       drawLine(ctx, this.rays[i][0], end, "yellow", 2);
-      drawLine(ctx, end, this.rays[i][1], "black", 1);
+      drawLine(ctx, end, this.rays[i][1], "red", 1);
     }
   }
 }
