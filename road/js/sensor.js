@@ -9,22 +9,36 @@ class Sensor {
     this.readings = []; // Sensor reading
   }
 
-  update(roadBorders){
+  update(roadBorders, traffic){
     this.#castRays();
     this.readings = [];
-    this.rays.forEach(ray => this.readings.push(this.#getReading(ray, roadBorders)));
+    this.rays.forEach(ray => this.readings.push(this.#getReading(ray, roadBorders, traffic)));
   }
 
   // Find all intersections and keep closest to the car
-  #getReading(ray, roadBorders){
+  #getReading(ray, roadBorders, traffic){
     let touches = [];
 
+    // Road collision
     for(let i=0; i<roadBorders.length; i++) {
       const touch = getIntersection(
         ray[0], ray[1], // line 1
         roadBorders[i][0], roadBorders[i][1]); // line  2
       if(touch)
         touches.push(touch)
+    }
+    
+    // Traffic collision
+    for(let i=0; i<traffic.length; i++) {
+      const poly=traffic[i].polygon;
+      for(let j=0; j<poly.length; j++){
+        const value = getIntersection(
+          ray[0], ray[1],
+          poly[j], poly[(j+1)%poly.length]
+        );
+        if(value)
+          touches.push(value);
+      }
     }
 
     // No intersection for this ray
@@ -67,7 +81,7 @@ class Sensor {
         end = this.readings[i];
 
       drawLine(ctx, this.rays[i][0], end, "yellow", 2);
-      drawLine(ctx, end, this.rays[i][1], "red", 1);
+      drawLine(ctx, end, this.rays[i][1], "black", 1);
     }
   }
 }
