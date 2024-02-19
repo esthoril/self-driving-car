@@ -24,40 +24,40 @@ const offset = 329;
 
 class Track {
   constructor(){
-    this.roadBorders = this.#setBorders();
+  this.roadBorders = this.#setBorders();
   }
 
   #setBorders(){
-    const createBorder = (track, offset) => {
-      const border = [];
+  const createBorder = (track, offset) => {
+    const border = [];
 
-      for(let i=0; i<track.length-1; i++) {
-        const [x1, y1] = [track[i][0] - offset, track[i][1]];
-        const [x2, y2] = [track[i + 1][0] - offset, track[i + 1][1]];
-        border.push([{ x: x1, y: y1 }, { x: x2, y: y2 }]);
-      }
-      return border;
-    };
+    for(let i=0; i<track.length-1; i++) {
+    const [x1, y1] = [track[i][0] - offset, track[i][1]];
+    const [x2, y2] = [track[i + 1][0] - offset, track[i + 1][1]];
+    border.push([{ x: x1, y: y1 }, { x: x2, y: y2 }]);
+    }
+    return border;
+  };
 
-    const outerBorder = createBorder(outerTrack, offset);
-    const innerBorder = createBorder(innerTrack, offset);
+  const outerBorder = createBorder(outerTrack, offset);
+  const innerBorder = createBorder(innerTrack, offset);
 
-    return outerBorder.concat(innerBorder);
+  return outerBorder.concat(innerBorder);
   }
 
   draw(ctx) {
-    ctx.beginPath();
-    ctx.lineWidth=6;
-    ctx.strokeStyle="#0525FF";
+  ctx.beginPath();
+  ctx.lineWidth=6;
+  ctx.strokeStyle="#0525FF";
 
-    this.#drawTrack(ctx, outerTrack);
-    this.#drawTrack(ctx, innerTrack);
+  this.#drawTrack(ctx, outerTrack);
+  this.#drawTrack(ctx, innerTrack);
 
-    ctx.stroke();
+  ctx.stroke();
   }
 
   #drawTrack(ctx, arr){
-    ctx.moveTo(arr[0][0]-offset, arr[0][1]);
-    arr.slice(1).forEach(point => ctx.lineTo(point[0] - offset, point[1]));
+  ctx.moveTo(arr[0][0]-offset, arr[0][1]);
+  arr.slice(1).forEach(point => ctx.lineTo(point[0] - offset, point[1]));
   }
 }
