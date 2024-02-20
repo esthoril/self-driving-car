@@ -93,5 +93,6 @@ function animate(time){
 
     networkCtx.lineDashOffset=-time/50;
     Visualizer.drawNetwork(networkCtx,bestCar.brain);
+    Visualizer.drawBest(networkCtx, bestCar);
     requestAnimationFrame(animate);
 }
